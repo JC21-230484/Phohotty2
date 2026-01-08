@@ -1,12 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../services/local_storage.dart';
-import 'tag_lens_page.dart'; // Import TagLensPage for navigation
 
 class GalleryPage extends StatelessWidget {
-  const GalleryPage({
-    super.key, // onGoToTagLens is no longer needed
-  });
+  const GalleryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,60 +20,59 @@ class GalleryPage extends StatelessWidget {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.label),
                 label: const Text("画像にタグ付け"),
-                // Use Navigator.push to show TagLensPage as a new screen
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const TagLensPage(),
-                    ),
-                  );
-                },
+                onPressed: () => Navigator.pushNamed(context, "/tag-lens"),
               ),
             ),
           ),
-
           Expanded(
-            child: FutureBuilder(
+            child: FutureBuilder<List<Map<String, dynamic>>>(
               future: local.loadGallery(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
-                final items = snapshot.data!;
-                if (items.isEmpty) {
+                if (snapshot.hasError) {
+                  return Center(child: Text("エラー: ${snapshot.error}"));
+                }
+                final items = snapshot.data;
+                if (items == null || items.isEmpty) {
                   return const Center(child: Text("まだ画像がありません"));
                 }
-
-                return GridView.count(
-                  crossAxisCount: 2,
-                  children: items.map((item) {
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: Image.file(
-                            File(item["path"]),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Text(
-                            (item["tags"] as List).join(", "),
-                            style: const TextStyle(fontSize: 12),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                );
+                return _buildGalleryGrid(items);
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildGalleryGrid(List<Map<String, dynamic>> items) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 4,
+        mainAxisSpacing: 4,
+      ),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        final filePath = item["path"];
+        final tags = (item["tags"] as List).join(", ");
+
+        return GridTile(
+          footer: GridTileBar(
+            backgroundColor: Colors.black45,
+            title: Text(
+              tags,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          child: Image.file(File(filePath), fit: BoxFit.cover),
+        );
+      },
     );
   }
 }

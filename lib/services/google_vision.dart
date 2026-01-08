@@ -24,7 +24,10 @@ class GoogleVisionService {
           'image': {'content': base64Image},
           'features': [
             {'type': 'LABEL_DETECTION', 'maxResults': 10}
-          ]
+          ],
+          'imageContext': {
+            'languageHints': ['ja']
+          }
         }
       ]
     };

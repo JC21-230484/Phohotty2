@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>写真を表示するためにフォトライブラリへのアクセスが必要です。</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>位置情報に基づいた機能を提供するために、位置情報へのアクセスが必要です。</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>位置情報に基づいた機能を提供するために、位置情報へのアクセスが必要です。</string>
 </dict>
 </plist>

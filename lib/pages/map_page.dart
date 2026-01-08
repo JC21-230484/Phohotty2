@@ -60,7 +60,7 @@ class _MapPageState extends State<MapPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Map")),
+      appBar: AppBar(title: const Text("画像MAPSNS")),
       body: GoogleMap(
         initialCameraPosition: _initialCameraPosition!,
         myLocationEnabled: true, // 青い現在地マーカー

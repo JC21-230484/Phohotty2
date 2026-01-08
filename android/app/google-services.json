@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "404083870658-vm8j0k3ctskmhvkdmb4ghbvhthc17e71.apps.googleusercontent.com",
+              "client_id": "404083870658-1ar0mt7qfafj71cj6bjip53fmdqk7oni.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.phototty"
+                "bundle_id": "jp.ac.jc21.Phohotty2"
               }
             }
           ]

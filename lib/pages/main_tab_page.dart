@@ -1,57 +1,81 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
-import 'gallery_page.dart';
+import 'tag_lens_page.dart';
 import 'map_page.dart';
 import 'sns_page.dart';
 import 'settings_page.dart';
+import 'auth_page.dart';
 
 class MainTabPage extends StatefulWidget {
   const MainTabPage({super.key});
-
-  static _MainTabPageState? of(BuildContext context) {
-    return context.findAncestorStateOfType<_MainTabPageState>();
-  }
 
   @override
   State<MainTabPage> createState() => _MainTabPageState();
 }
 
 class _MainTabPageState extends State<MainTabPage> {
-  int _currentIndex = 0; // Default to Home page
+  int _selectedIndex = 0;
 
-  void switchTab(int index) {
+  static const List<Widget> _pages = [
+    HomePage(),
+    TagLensPage(),
+    MapPage(),
+    SnsPage(),
+    SettingsPage(),
+  ];
+
+  void _onItemTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TagLensPage is removed from this list. Navigation will be handled by Navigator.push
-    final pages = [
-      const HomePage(),
-      GalleryPage(),
-      const MapPage(),
-      const SnsPage(),
-      const SettingsPage(),
-    ];
-
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AuthPage()),
+              );
+            },
+            child: Text('アカウント'),
+          ),
+        ],
+      ),
       body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
+        index: _selectedIndex,
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: switchTab,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),//タブアイコン
-          BottomNavigationBarItem(icon: Icon(Icons.photo), label: 'Gallery'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.smartphone), label: 'SNS'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_album),
+            label: '写真一覧',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera),
+            label: 'タグ付け',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: '画像マップ',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.share),
+            label: 'SNS投稿',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '設定',
+          ),
         ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
